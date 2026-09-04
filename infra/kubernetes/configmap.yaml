@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: helixgate-config
+  namespace: helixgate
+data:
+  APP_ENV: "prod"
+  HELIXGATE_JWT_ISSUER: "https://id.helixgate.dev"
+  HELIXGATE_DEMO_RPS: "2000"
+  HELIXGATE_DEMO_BURST: "4000"

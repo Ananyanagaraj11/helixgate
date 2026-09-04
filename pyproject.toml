@@ -1,0 +1,13 @@
+[project]
+name = "helixgate"
+version = "1.0.0"
+description = "AI-native API and MCP gateway control plane"
+requires-python = ">=3.11"
+readme = "README.md"
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

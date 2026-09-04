@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HelixGate · Control Plane</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="nav">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="28" height="28">
+            <path d="M8 28c8-14 16-14 24 0" fill="none" stroke="currentColor" stroke-width="2.4"/>
+            <path d="M8 12c8 14 16 14 24 0" fill="none" stroke="currentColor" stroke-width="2.4"/>
+            <circle cx="20" cy="20" r="3.2" fill="currentColor"/>
+          </svg>
+        </div>
+        <div>
+          <h1>HELIXGATE</h1>
+          <p>DX control plane</p>
+        </div>
+      </div>
+      <button class="active" data-page="overview">Overview</button>
+      <button data-page="gateway">API gateway</button>
+      <button data-page="mcp">MCP mesh</button>
+      <button data-page="security">Identity · TLS</button>
+      <button data-page="gitops">GitOps</button>
+      <button data-page="aiops">AI ops</button>
+      <button data-page="selfserve">Self-service</button>
+      <div class="nav-foot">
+        <span class="pulse"></span>
+        sjc-prod-1 · live
+      </div>
+    </aside>
+
+    <section class="main">
+      <header class="top">
+        <div>
+          <h2 id="pageTitle">Overview</h2>
+          <p class="lede" id="lede">Multi-region API and AI gateway for agents, MCP servers, and human-gated remediation.</p>
+        </div>
+        <div class="chips" id="chips"></div>
+      </header>
+
+      <div id="overview" class="page active">
+        <div class="kpis" id="kpis"></div>
+        <div class="grid">
+          <div class="card span-7">
+            <h4>Traffic fabric</h4>
+            <p class="hint">SJC primary · IAD failover · FRA EU pin. Unhealthy upstreams are ejected from the weighted pool.</p>
+            <div id="fabric" class="fabric"></div>
+          </div>
+          <div class="card span-5">
+            <h4>Regions</h4>
+            <div id="regionList"></div>
+          </div>
+          <div class="card span-12">
+            <h4>Live gateway + MCP probes</h4>
+            <p class="hint">Real JWT checks, token-bucket rate limits, MCP allowlists, PII guardrails, and usage quotas — not screenshots.</p>
+            <div class="probe">
+              <select id="probeRoute"></select>
+              <button id="tokenBtn">Issue JWT</button>
+              <button id="burstBtn" class="ghost">Burst 12 requests</button>
+              <button id="piiBtn" class="ghost">MCP PII probe</button>
+            </div>
+            <pre id="probeOut" class="code empty">Issue a token, then burst the gateway. Watch 200s flip to 429. The MCP probe should return 451.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="gateway" class="page">
+        <div class="card">
+          <h4>Routes · Envoy / Contour / NGINX equivalents</h4>
+          <table class="table" id="routeTable"></table>
+        </div>
+      </div>
+
+      <div id="mcp" class="page">
+        <div class="grid">
+          <div class="card span-7">
+            <h4>Registered MCP servers</h4>
+            <div id="mcpList"></div>
+          </div>
+          <div class="card span-5">
+            <h4>Invoke a tool</h4>
+            <select id="mcpServer"></select>
+            <select id="mcpTool"></select>
+            <input id="mcpArg" placeholder="tool argument" />
+            <button id="mcpBtn">Call MCP</button>
+            <pre id="mcpOut" class="code empty">Privileged tools stay 423 until HITL. PII arguments return 451.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="security" class="page">
+        <div class="grid">
+          <div class="card span-6">
+            <h4>Gateway policies</h4>
+            <div id="policyList"></div>
+          </div>
+          <div class="card span-6">
+            <h4>Config validation</h4>
+            <div id="findings"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="gitops" class="page">
+        <div class="grid">
+          <div class="card span-6">
+            <h4>Argo CD applications</h4>
+            <div id="argoList"></div>
+          </div>
+          <div class="card span-6">
+            <h4>Rendered manifests</h4>
+            <select id="manifestRoute"></select>
+            <div class="tabs" id="manifestTabs">
+              <button data-kind="envoy" class="active">Envoy</button>
+              <button data-kind="httpproxy">HTTPProxy</button>
+              <button data-kind="helm">Helm</button>
+              <button data-kind="argocd">Argo CD</button>
+              <button data-kind="nginx">NGINX</button>
+            </div>
+            <pre id="manifestOut" class="code">Select a route.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="aiops" class="page">
+        <div class="hero">
+          <h3>Diagnose from logs. Validate config. Remediate with a human gate.</h3>
+          <p>Sentinel retrieves runbooks. Pathfinder names the cause. Validator lints live gateway + MCP policy. Steward drafts a change — production apply waits for you.</p>
+          <div class="ask-row">
+            <input id="query" placeholder="Paste an incident or pick a sample below" />
+            <button id="askBtn">Run AI ops</button>
+          </div>
+          <div class="suggestions" id="suggestions"></div>
+        </div>
+        <div class="grid">
+          <div class="card span-8">
+            <h4>Grounded diagnosis</h4>
+            <div id="answer" class="answer empty">Run an analysis to see retrieval, policy findings, and a gated remediation.</div>
+          </div>
+          <div class="card span-4">
+            <h4>Agent graph</h4>
+            <div id="timeline" class="timeline empty">Sentinel → Pathfinder → Validator → Steward</div>
+          </div>
+          <div class="card span-6">
+            <h4>Citations</h4>
+            <div id="cites"></div>
+          </div>
+          <div class="card span-6">
+            <h4>HITL queue</h4>
+            <div id="hitlList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="selfserve" class="page">
+        <div class="grid">
+          <div class="card span-5">
+            <h4>Register an API</h4>
+            <p class="hint">Creates a JWT-protected route, rate limit, TLS 1.3 defaults, and an Argo CD application.</p>
+            <label>Service name</label>
+            <input id="ssName" placeholder="billing-api" />
+            <label>Host</label>
+            <input id="ssHost" placeholder="billing.helixgate.dev" />
+            <label>Path</label>
+            <input id="ssPath" value="/v1/billing/*" />
+            <button id="ssBtn">Publish via GitOps</button>
+            <pre id="ssOut" class="code empty">No route registered yet.</pre>
+          </div>
+          <div class="card span-7">
+            <h4>Audit</h4>
+            <table class="table" id="auditTable"></table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

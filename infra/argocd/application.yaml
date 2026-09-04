@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helixgate-gateway
+  namespace: argocd
+spec:
+  project: helixgate
+  source:
+    repoURL: https://github.com/Ananyanagaraj11/helixgate
+    targetRevision: main
+    path: infra/helm/helixgate
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helixgate
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helixgate-mcp-mesh
+  namespace: argocd
+spec:
+  project: helixgate
+  source:
+    repoURL: https://github.com/Ananyanagaraj11/helixgate
+    targetRevision: main
+    path: infra/contour
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helixgate
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false

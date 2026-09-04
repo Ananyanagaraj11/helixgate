@@ -1,0 +1,23 @@
+static_resources:
+  listeners:
+    - name: helixgate-edge
+      address:
+        socket_address: { address: 0.0.0.0, port_value: 8443 }
+      filter_chains:
+        - transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              min_protocol_version: TLSv1_3
+              require_client_certificate: true
+          filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                stat_prefix: helixgate
+                http_filters:
+                  - name: envoy.filters.http.jwt_authn
+                  - name: envoy.filters.http.local_ratelimit
+                  - name: envoy.filters.http.router
+  clusters:
+    - name: sjc-primary
+      type: STRICT_DNS
+      lb_policy: LEAST_REQUEST

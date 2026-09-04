@@ -1,0 +1,1 @@
+When an Envoy cluster reports consecutive 5xx above the circuit-breaker threshold, drain that region's weight and fail open to a healthy region. HITL is required before production weight changes. See SOP-GW-014.

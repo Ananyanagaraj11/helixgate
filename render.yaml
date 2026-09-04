@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: helixgate
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: PYTHONPATH=src uvicorn helixgate.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: APP_ENV
+        value: demo
+      - key: HELIXGATE_JWT_SECRET
+        value: helixgate-demo-secret-key-32b!!!
