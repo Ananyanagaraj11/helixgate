@@ -219,8 +219,6 @@ infra/                     Kubernetes, Helm, Argo CD, Envoy, Contour
 
 ---
 
-## Say this in an interview
-
 > HelixGate is the control plane I would want if I owned API and AI gateway infrastructure. Clients and agents share one door: JWT audiences, rate limits, TLS 1.3, weighted regions. San Jose is primary because that is where the team sits; Ashburn is failover; Frankfurt is an EU pin and it is already ejected in the demo. MCP servers live behind the same policies — PII never egresses, privileged kubectl-shaped tools stay 423. When Envoy 503s, Sentinel retrieves the runbook, Validator lints live config, and Steward will drain SJC — but only after a human, and only as GitOps.
 
 Then pause: *Want the gateway engine, the MCP guardrails, or the agent graph?*
